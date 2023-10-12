@@ -53,39 +53,6 @@
             ],
             "bindings": [
                 {
-                    "name": "1D Axis",
-                    "id": "fce93171-47c5-4374-b774-875f97d0facf",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "3b44b122-1f0d-42c3-b15b-7b836d950a0d",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "MarioActions",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "9c5e5437-d328-42c5-b3a1-92f040a5ef45",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "MarioActions",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "",
                     "id": "9e3ff1b6-1b8f-454d-b1db-9a7942689322",
                     "path": "<Keyboard>/space",
@@ -148,6 +115,39 @@
                     "processors": "",
                     "groups": "MarioActions",
                     "action": "Point",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "6efcd2c4-788d-4b4d-8ee5-168c15ac628a",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "39f2dd99-29e1-4604-9731-dabeb40304c8",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "MarioActions",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "1241eea8-e15f-46c2-9579-18f01d455446",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "MarioActions",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }

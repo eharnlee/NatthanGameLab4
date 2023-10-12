@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using SuperMarioBros;
 using UnityEngine;
 
 public class QuestionBlockCoin : MonoBehaviour
@@ -29,7 +28,7 @@ public class QuestionBlockCoin : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (GameManager.marioPosition.y < questionBlock.transform.position.y)
+        if (SuperMarioManager.marioPosition.y < questionBlock.transform.position.y)
         {
             coinAnimator.SetBool("hitCoin", true);
             blockAnimator.SetBool("hitBlock", true);

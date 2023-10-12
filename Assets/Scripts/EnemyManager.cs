@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
+    void Awake()
+    {
+        // subscribe to Game Restart event
+        SuperMarioManager.instance.gameRestart.AddListener(GameRestart);
+    }
+
     // Start is called before the first frame update
     void Start()
     {

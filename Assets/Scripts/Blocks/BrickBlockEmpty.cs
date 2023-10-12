@@ -1,17 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
-using SuperMarioBros;
 using UnityEngine;
 
 public class BrickBlockEmpty : MonoBehaviour
 {
     public Animator blockAnimator;
     public GameObject brickBlock;
+    private AudioSource blockBumpAudio;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        blockBumpAudio = brickBlock.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -25,11 +25,12 @@ public class BrickBlockEmpty : MonoBehaviour
 
     }
 
-    void OnCollisionEnter2D(Collision2D col)
+    void OnCollisionEnter2D(Collision2D other)
     {
-        if (GameManager.marioPosition.y < brickBlock.transform.position.y)
+        if (other.gameObject.tag == "Player")
         {
-            blockAnimator.SetTrigger("hitBlock");
+            blockAnimator.SetTrigger("hit");
+            blockBumpAudio.PlayOneShot(blockBumpAudio.clip);
         }
     }
 }

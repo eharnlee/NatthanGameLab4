@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using SuperMarioBros;
 using Unity.VisualScripting;
 using UnityEditor.Build.Content;
 using UnityEngine;
+// using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -18,48 +18,35 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D marioBody;
     private SpriteRenderer marioSprite;
     private bool faceRightState = true;
-    public GameObject enemies;
 
-    public GameManager gameManager;
+    private SuperMarioManager gameManager;
 
     // for animation
-    public Animator marioAnimator;
+    private Animator marioAnimator;
 
     // for audio
-    public AudioSource marioAudio;
-    public AudioSource marioDeathAudio;
+    private AudioSource marioJumpAudio;
+    private AudioSource marioDeathAudio;
+    private AudioSource smallMarioPowerUpAudio;
 
     // state
     [System.NonSerialized]
     public bool alive = true;
 
-    public Transform gameCamera;
+    private Transform gameCamera;
 
     int collisionLayerMask = (1 << 3) | (1 << 6) | (1 << 7);
 
-    void PlayJumpSound()
+    void Awake()
     {
-        // play jump sound
-        marioAudio.PlayOneShot(marioAudio.clip);
-    }
-
-    void PlayDeathImpulse()
-    {
-        marioBody.velocity = Vector2.zero;
-        marioBody.AddForce(Vector2.up * deathImpulse, ForceMode2D.Impulse);
-    }
-
-    void GameOverScene()
-    {
-        // stop time
-        Time.timeScale = 0.0f;
-        // set gameover scene
-        gameManager.GameOver(); // replace this with whichever way you triggered the game over screen for Checkoff 1
+        // subscribe to Game Restart event
+        SuperMarioManager.instance.gameRestart.AddListener(GameRestart);
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        gameManager = SuperMarioManager.instance;
         marioSprite = GetComponent<SpriteRenderer>();
 
         // Set to be 30 FPS
@@ -68,7 +55,14 @@ public class PlayerMovement : MonoBehaviour
         marioBody = GetComponent<Rigidbody2D>();
 
         // update animator state
+        marioAnimator = this.gameObject.GetComponent<Animator>();
         marioAnimator.SetBool("onGround", onGroundState);
+
+        gameCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
+
+        marioJumpAudio = this.transform.Find("MarioJumpAudio").GetComponent<AudioSource>();
+        marioDeathAudio = this.transform.Find("MarioDeathAudio").GetComponent<AudioSource>();
+        smallMarioPowerUpAudio = this.transform.Find("SmallMarioPowerUpAudio").GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -94,7 +88,7 @@ public class PlayerMovement : MonoBehaviour
             // else if not above goomba, die
             else
             {
-                marioAnimator.Play("Mario Die");
+                marioAnimator.Play("Small Mario Die");
                 marioDeathAudio.PlayOneShot(marioDeathAudio.clip);
                 alive = false;
             }
@@ -113,7 +107,7 @@ public class PlayerMovement : MonoBehaviour
     // FixedUpdate may be called once per frame. See documentation for details.
     void FixedUpdate()
     {
-        GameManager.marioPosition = marioBody.position;
+        SuperMarioManager.marioPosition = marioBody.position;
 
         if (alive && moving)
         {
@@ -139,6 +133,17 @@ public class PlayerMovement : MonoBehaviour
             if (marioBody.velocity.x < -0.05f)
                 marioAnimator.SetTrigger("onSkid");
         }
+    }
+    void PlayJumpSound()
+    {
+        // play jump sound
+        marioJumpAudio.PlayOneShot(marioJumpAudio.clip);
+    }
+
+    void PlayDeathImpulse()
+    {
+        marioBody.velocity = Vector2.zero;
+        marioBody.AddForce(Vector2.up * deathImpulse, ForceMode2D.Impulse);
     }
 
     void Move(int value)
@@ -189,6 +194,14 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    void GameOverScene()
+    {
+        // stop time
+        Time.timeScale = 0.0f;
+        // set gameover scene
+        gameManager.GameOver(); // replace this with whichever way you triggered the game over screen for Checkoff 1
+    }
+
     public void GameRestart()
     {
         // reset position
@@ -202,6 +215,13 @@ public class PlayerMovement : MonoBehaviour
         alive = true;
 
         // reset camera position
+        gameCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
         gameCamera.position = new Vector3(0, 6.5f, -10);
+    }
+
+    public void SmallMarioPowerUp()
+    {
+        smallMarioPowerUpAudio.PlayOneShot(smallMarioPowerUpAudio.clip);
+        marioAnimator.SetTrigger("smallMarioPowerUp");
     }
 }

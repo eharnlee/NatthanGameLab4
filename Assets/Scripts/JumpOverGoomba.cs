@@ -2,27 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using SuperMarioBros;
 
 public class JumpOverGoomba : MonoBehaviour
 {
     public Transform enemyLocation;
-    private bool onGroundState;
 
     [System.NonSerialized]
     public int score = 0; // we don't want this to show up in the inspector
 
-    private bool countScoreState = false;
     public Vector3 boxSize;
     public float maxDistance;
     public LayerMask layerMask;
 
-    GameManager gameManager;
+    SuperMarioManager gameManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
+        gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<SuperMarioManager>();
     }
 
     // Update is called once per frame
@@ -54,7 +51,7 @@ public class JumpOverGoomba : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.CompareTag("Ground")) onGroundState = true;
+
     }
 
 

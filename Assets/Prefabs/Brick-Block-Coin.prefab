@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6367318680448498687}
-  - component: {fileID: 2291541722956600967}
-  - component: {fileID: 7900799285168498929}
+  - component: {fileID: 4612009228998021068}
+  - component: {fileID: 8156503114577241758}
   m_Layer: 7
   m_Name: Brick-Block-Coin
   m_TagString: Untagged
@@ -35,8 +35,8 @@ Transform:
   - {fileID: 7802746941228183964}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &2291541722956600967
-BoxCollider2D:
+--- !u!68 &4612009228998021068
+EdgeCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -68,19 +68,15 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &7900799285168498929
+  m_Points:
+  - {x: -0.4507599, y: -0.50045586}
+  - {x: 0.43963814, y: -0.50020146}
+  m_AdjacentStartPoint: {x: 0, y: 0}
+  m_AdjacentEndPoint: {x: 0, y: 0}
+  m_UseAdjacentStartPoint: 0
+  m_UseAdjacentEndPoint: 0
+--- !u!114 &8156503114577241758
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -89,12 +85,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6605181378882867959}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31090152a8f644b4f99295d5437d6476, type: 3}
+  m_Script: {fileID: 11500000, guid: 3109b962bfcbfec45848416f928a25fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockAnimator: {fileID: 7574180806915367879}
-  coinAnimator: {fileID: 1999394147822007784}
-  brickBlock: {fileID: 6605181378882867959}
+  brickBlock: {fileID: 2802457659463403493}
+  powerUpObject: {fileID: 5809189023360100912}
+  powerUp: {fileID: 8949098682422453986}
 --- !u!1001 &8522922477771773486
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -103,6 +99,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6367318680448498687}
     m_Modifications:
+    - target: {fileID: 753813077752000716, guid: cbef6f9e359b64947ac9f61e0c261fb7, type: 3}
+      propertyPath: coinAudio
+      value: 
+      objectReference: {fileID: 7966123049494751124}
     - target: {fileID: 2799517636159699998, guid: cbef6f9e359b64947ac9f61e0c261fb7, type: 3}
       propertyPath: m_Name
       value: Coin
@@ -152,16 +152,32 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cbef6f9e359b64947ac9f61e0c261fb7, type: 3}
---- !u!95 &1999394147822007784 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 7924302021109982150, guid: cbef6f9e359b64947ac9f61e0c261fb7, type: 3}
-  m_PrefabInstance: {fileID: 8522922477771773486}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1999533641112544544 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7924160058751169294, guid: cbef6f9e359b64947ac9f61e0c261fb7, type: 3}
   m_PrefabInstance: {fileID: 8522922477771773486}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5809189023360100912 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2799517636159699998, guid: cbef6f9e359b64947ac9f61e0c261fb7, type: 3}
+  m_PrefabInstance: {fileID: 8522922477771773486}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &7966123049494751124 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 1786480322115334586, guid: cbef6f9e359b64947ac9f61e0c261fb7, type: 3}
+  m_PrefabInstance: {fileID: 8522922477771773486}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8949098682422453986 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 753813077752000716, guid: cbef6f9e359b64947ac9f61e0c261fb7, type: 3}
+  m_PrefabInstance: {fileID: 8522922477771773486}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5809189023360100912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fce0c3b4eac663b4b952126e01227dac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8839812217145828616
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -223,14 +239,14 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1692392bdcb86d44ca0f05f544c7d025, type: 3}
+--- !u!1 &2802457659463403493 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6649852942901912301, guid: 1692392bdcb86d44ca0f05f544c7d025, type: 3}
+  m_PrefabInstance: {fileID: 8839812217145828616}
+  m_PrefabAsset: {fileID: 0}
 --- !u!82 &3364851795278495912 stripped
 AudioSource:
   m_CorrespondingSourceObject: {fileID: 6061572973730178464, guid: 1692392bdcb86d44ca0f05f544c7d025, type: 3}
-  m_PrefabInstance: {fileID: 8839812217145828616}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &7574180806915367879 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 1419116774936741583, guid: 1692392bdcb86d44ca0f05f544c7d025, type: 3}
   m_PrefabInstance: {fileID: 8839812217145828616}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &7802746941228183964 stripped

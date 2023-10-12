@@ -18,6 +18,16 @@ public class HUDManager : MonoBehaviour
     public Transform restartButton;
 
     public GameObject gameOverPanel;
+
+    void Awake()
+    {
+        // subscribe to events
+        SuperMarioManager.instance.gameStart.AddListener(GameStart);
+        SuperMarioManager.instance.gameOver.AddListener(GameOver);
+        SuperMarioManager.instance.gameRestart.AddListener(GameStart);
+        SuperMarioManager.instance.scoreChange.AddListener(SetScore);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
