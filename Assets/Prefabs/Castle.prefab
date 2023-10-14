@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9077427525115537733}
   - component: {fileID: 3834666588199124517}
   - component: {fileID: 2820046532713616244}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Castle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64,7 +64,7 @@ EdgeCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -99,7 +99,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5039910578234723123}
   - component: {fileID: 5833207433879646798}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Castle-Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +183,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3073801291427780268}
   - component: {fileID: 4545024688590523791}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Castle-Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}

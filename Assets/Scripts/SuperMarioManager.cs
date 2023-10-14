@@ -82,7 +82,7 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
 
     public void GameRestart()
     {
-        // SceneManager.LoadSceneAsync("World 1-1", LoadSceneMode.Single);
+        SceneManager.LoadSceneAsync("World 1-1", LoadSceneMode.Single);
 
         score.SetValue(0);
         lives.SetValue(gameConstants.maxLives);

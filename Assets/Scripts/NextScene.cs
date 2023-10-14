@@ -9,7 +9,7 @@ public class NextScene : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            // Debug.Log("Change scene!");
+            Debug.Log("Change scene!");
             SceneManager.LoadSceneAsync(nextSceneName, LoadSceneMode.Single);
         }
     }
