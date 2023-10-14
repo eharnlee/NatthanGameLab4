@@ -9,9 +9,12 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
 {
     // events
     public UnityEvent gameStart;
+    public UnityEvent gamePause;
+    public UnityEvent gameResume;
     public UnityEvent gameRestart;
-    public UnityEvent<int> scoreChange;
     public UnityEvent gameOver;
+    public UnityEvent<int> scoreChange;
+
     public static Vector3 marioPosition;
     private GameObject marioBody;
     private int score = 0;
@@ -32,6 +35,8 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
         SceneManager.activeSceneChanged += SceneSetup;
 
         marioBody = GameObject.Find("Mario");
+
+        SetScore(score);
     }
 
     // Update is called once per frame
@@ -46,21 +51,41 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
         SetScore(score);
     }
 
+    public void GamePause()
+    {
+        gamePause.Invoke();
+        Time.timeScale = 0f;
+    }
+
+    public void GameResume()
+    {
+        gameResume.Invoke();
+        Time.timeScale = 1f;
+    }
     public void GameRestart()
     {
-        // reset score
-        score = 0;
-        SetScore(score);
+        gameScore.Value = 0;
+
         gameRestart.Invoke();
         Time.timeScale = 1.0f;
         ResetAudioMixerSpecialEventsPitch();
     }
 
+    public void GameOver()
+    {
+        Time.timeScale = 0.0f;
+        gameOver.Invoke();
+        gameScore.Value = 0;
+    }
+
     public void IncreaseScore(int increment)
     {
-        score += increment;
-        SetScore(score);
-        IncreaseAudioMixerSpecialEventsPitch();
+        // score += increment;
+        // 
+        // IncreaseAudioMixerSpecialEventsPitch();
+
+        gameScore.ApplyChange(1);
+        SetScore(gameScore.Value);
     }
 
     public void IncreaseAudioMixerSpecialEventsPitch()
@@ -83,12 +108,9 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
 
     public void SetScore(int score)
     {
-        scoreChange.Invoke(score);
+        // scoreChange.Invoke(score);
+        scoreChange.Invoke(gameScore.Value);
     }
 
-    public void GameOver()
-    {
-        Time.timeScale = 0.0f;
-        gameOver.Invoke();
-    }
+
 }

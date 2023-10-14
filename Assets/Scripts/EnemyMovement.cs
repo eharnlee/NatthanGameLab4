@@ -50,7 +50,10 @@ public class EnemyMovement : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        // Debug.Log(other.gameObject.name);
+        if (other.gameObject.tag == "Player")
+        {
+            StartCoroutine(WaitForDeath());
+        }
     }
 
     public void GameRestart()
@@ -70,5 +73,12 @@ public class EnemyMovement : MonoBehaviour
     public void playStompedSound()
     {
         stompAudio.PlayOneShot(stompAudio.clip);
+    }
+
+    IEnumerator WaitForDeath()
+    {
+        yield return new WaitForSecondsRealtime(0.3f);
+
+        Destroy(this.gameObject);
     }
 }

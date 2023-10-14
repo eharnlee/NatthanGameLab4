@@ -5,7 +5,8 @@ using UnityEngine;
 public class MagicMushroomPowerUp : BasePowerUp
 {
     private AudioSource magicMushroomAudio;
-    private GameObject magicMushroomBody;
+
+    private Vector2 velocity;
 
     // setup this object's type
     // instantiate variables
@@ -14,12 +15,22 @@ public class MagicMushroomPowerUp : BasePowerUp
         base.Start(); // call base class Start()
         this.type = PowerUpType.MagicMushroom;
 
-        magicMushroomBody = this.gameObject.transform.Find("MagicMushroomBody").gameObject;
-        magicMushroomAudio = magicMushroomBody.GetComponent<AudioSource>();
+        // magicMushroomBody = this.gameObject.transform.Find("MagicMushroomBody").gameObject;
+        magicMushroomAudio = this.transform.Find("MagicMushroomAppearAudio").GetComponent<AudioSource>();
 
-        // workaround so that the question block and mushroom's colliders do not force
-        // the mushroom to be pushed outside of the question block
-        this.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+        // for the mushroom to remain stationary while BoxCollider2D is inactive
+        powerUpRigidBody.bodyType = RigidbodyType2D.Static;
+        powerUpCollider.enabled = false;
+
+        velocity = new Vector2(3.0f, 0f);
+    }
+
+    void Update()
+    {
+        if (spawned)
+        {
+            MoveMushroom();
+        }
     }
 
     void OnCollisionEnter2D(Collision2D col)
@@ -32,13 +43,11 @@ public class MagicMushroomPowerUp : BasePowerUp
             // then destroy powerup (optional)
             DestroyPowerup();
         }
-        else if (col.gameObject.layer == 10) // else if hitting Pipe, flip travel direction
+        else if (col.gameObject.layer == 7) // else if hitting Pipe, flip travel direction
         {
             if (spawned)
             {
-                goRight = !goRight;
-                rigidBody.bodyType = RigidbodyType2D.Dynamic;
-                rigidBody.AddForce(Vector2.right * 3 * (goRight ? 1 : -1), ForceMode2D.Impulse);
+                moveRight *= -1;
             }
         }
     }
@@ -46,10 +55,8 @@ public class MagicMushroomPowerUp : BasePowerUp
     // interface implementation
     public override void SpawnPowerup()
     {
-        spawned = true;
-        rigidBody.bodyType = RigidbodyType2D.Dynamic;
-        rigidBody.AddForce(Vector2.right * 3, ForceMode2D.Impulse); // move to the right
         magicMushroomAudio.PlayOneShot(magicMushroomAudio.clip);
+        StartCoroutine(WaitForSpawn());
     }
 
 
@@ -57,5 +64,19 @@ public class MagicMushroomPowerUp : BasePowerUp
     public override void ApplyPowerup(MonoBehaviour i)
     {
         // TODO: do something with the object
+    }
+
+    IEnumerator WaitForSpawn()
+    {
+        yield return new WaitForSecondsRealtime(1f);
+
+        spawned = true;
+        powerUpRigidBody.bodyType = RigidbodyType2D.Dynamic;
+        powerUpCollider.enabled = true;
+    }
+
+    public void MoveMushroom()
+    {
+        powerUpRigidBody.MovePosition(powerUpRigidBody.position + velocity * moveRight * Time.fixedDeltaTime);
     }
 }

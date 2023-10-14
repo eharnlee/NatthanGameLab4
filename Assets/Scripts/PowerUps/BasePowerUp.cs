@@ -6,13 +6,15 @@ public abstract class BasePowerUp : MonoBehaviour, IPowerup
     public PowerUpType type;
     public bool spawned = false;
     protected bool consumed = false;
-    protected bool goRight = true;
-    protected Rigidbody2D rigidBody;
+    protected int moveRight = -1;
+    protected Rigidbody2D powerUpRigidBody;
+    protected Collider2D powerUpCollider;
 
     // base methods
     protected virtual void Start()
     {
-        rigidBody = GetComponent<Rigidbody2D>();
+        powerUpRigidBody = GetComponent<Rigidbody2D>();
+        powerUpCollider = GetComponent<Collider2D>();
     }
 
     // interface methods

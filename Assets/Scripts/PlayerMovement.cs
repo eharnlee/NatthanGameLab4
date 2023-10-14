@@ -89,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
             else
             {
                 marioAnimator.Play("Small Mario Die");
-                marioDeathAudio.PlayOneShot(marioDeathAudio.clip);
+                // marioDeathAudio.PlayOneShot(marioDeathAudio.clip);
                 alive = false;
             }
         }
@@ -222,6 +222,6 @@ public class PlayerMovement : MonoBehaviour
     public void SmallMarioPowerUp()
     {
         smallMarioPowerUpAudio.PlayOneShot(smallMarioPowerUpAudio.clip);
-        marioAnimator.SetTrigger("smallMarioPowerUp");
+        marioAnimator.Play("Small Mario Power Up");
     }
 }
