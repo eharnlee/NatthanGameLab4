@@ -1,23 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BrickPowerUpController : MonoBehaviour, IPowerUpController
+public class BlockPowerUpController : MonoBehaviour, IPowerUpController
 {
-    public GameObject brickBlock;
+    public GameObject block;
     private Animator blockAnimator;
     private AudioSource blockBumpAudio;
-
-    public GameObject powerUpObject;
     public BasePowerUp powerUp;
-    private Animator powerUpAnimator;
 
     void Start()
     {
-        blockAnimator = brickBlock.GetComponent<Animator>();
-        blockBumpAudio = brickBlock.GetComponent<AudioSource>();
-
-        powerUpAnimator = powerUpObject.GetComponent<Animator>();
+        blockAnimator = block.GetComponent<Animator>();
+        blockBumpAudio = block.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -31,16 +27,29 @@ public class BrickPowerUpController : MonoBehaviour, IPowerUpController
     {
         if (other.gameObject.tag == "Player" && !powerUp.hasSpawned)
         {
-            // show disabled sprite
-            blockAnimator.SetTrigger("spawned");
-            // spawn the powerup
-            powerUpAnimator.SetTrigger("spawned");
-
-            powerUp.SpawnPowerup();
+            SpawnPowerup();
         }
         else if (other.gameObject.tag == "Player")
         {
             blockBumpAudio.PlayOneShot(blockBumpAudio.clip);
+        }
+    }
+
+    public void SpawnPowerup()
+    {
+        // show disabled sprite
+        blockAnimator.SetTrigger("spawned");
+
+        // spawn the powerup
+        powerUp.SpawnPowerup();
+    }
+
+    public void GameRestart()
+    {
+        if (powerUp.hasSpawned)
+        {
+            blockAnimator.SetTrigger("reset");
+            powerUp.GameRestart();
         }
     }
 

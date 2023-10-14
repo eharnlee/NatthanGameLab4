@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class EnemyMovement : MonoBehaviour
 {
-
-    private float originalX;
     private float maxOffset = 5.0f;
     private float enemyPatroltime = 2.0f;
     public int moveRight = -1;
@@ -15,14 +14,18 @@ public class EnemyMovement : MonoBehaviour
     public Vector3 startPosition;
     public Animator enemyAnimator;
     public AudioSource stompAudio;
+    public GameObject enemyPrefab;
+
+    private bool isDead;
 
     void Start()
     {
         enemyBody = GetComponent<Rigidbody2D>();
         // get the starting position
-        originalX = transform.position.x;
-        startPosition = transform.localPosition;
+        startPosition = transform.position;
         ComputeVelocity();
+
+        isDead = false;
     }
     void ComputeVelocity()
     {
@@ -35,8 +38,9 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        if (Mathf.Abs(enemyBody.position.x - originalX) < maxOffset)
+        if (Mathf.Abs(enemyBody.position.x - startPosition.x) < maxOffset)
         {// move goomba
+            ComputeVelocity();
             Movegoomba();
         }
         else
@@ -50,14 +54,27 @@ public class EnemyMovement : MonoBehaviour
 
     public void GameRestart()
     {
+        if (isDead)
+        {
+            // reset must be done before "SetActive(true)" because we only want to trigger "reset" for
+            // enemies who are dead but still active. If "SetActive(true)" first then trigger "reset", then
+            // the enemies who were inactive will be set active, then given an extra "reset", preventing their
+            // death animation
+            enemyAnimator.SetTrigger("reset");
+        }
+
+        this.gameObject.SetActive(true);
+
+        isDead = false;
+
         transform.localPosition = startPosition;
-        originalX = transform.position.x;
         moveRight = -1;
-        ComputeVelocity();
-        enemyBody.gameObject.GetComponent<BoxCollider2D>().isTrigger = true;
     }
+
     public void stomped()
     {
+        isDead = true;
+        SuperMarioManager.instance.IncreaseScore(1);
         enemyAnimator.SetTrigger("stomped");
         playStompedSound();
         StartCoroutine(WaitForDeath());
@@ -72,6 +89,9 @@ public class EnemyMovement : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(0.3f);
 
-        Destroy(this.gameObject);
+        if (isDead)
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 }

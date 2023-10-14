@@ -5,8 +5,9 @@ using UnityEngine;
 public class MagicMushroomPowerUp : BasePowerUp
 {
     private AudioSource magicMushroomAudio;
-
+    private Vector3 magicMushroomStartingPosition;
     private Vector2 velocity;
+    private bool canMove;
 
     // setup this object's type
     // instantiate variables
@@ -14,9 +15,13 @@ public class MagicMushroomPowerUp : BasePowerUp
     {
         base.Start(); // call base class Start()
         this.type = PowerUpType.MagicMushroom;
+        canMove = false;
 
-        // magicMushroomBody = this.gameObject.transform.Find("MagicMushroomBody").gameObject;
+        animator = this.transform.Find("MagicMushroomBody").gameObject.GetComponent<Animator>();
+
         magicMushroomAudio = this.transform.Find("MagicMushroomAppearAudio").GetComponent<AudioSource>();
+
+        magicMushroomStartingPosition = this.transform.position;
 
         // for the mushroom to remain stationary while BoxCollider2D is inactive
         powerUpRigidBody.bodyType = RigidbodyType2D.Static;
@@ -27,7 +32,7 @@ public class MagicMushroomPowerUp : BasePowerUp
 
     void Update()
     {
-        if (spawned)
+        if (canMove)
         {
             MoveMushroom();
         }
@@ -38,10 +43,7 @@ public class MagicMushroomPowerUp : BasePowerUp
         if (col.gameObject.CompareTag("Player") && spawned)
         {
             // TODO: do something when colliding with Player
-            SuperMarioManager.instance.SmallMarioPowerUp();
-
-            // then destroy powerup (optional)
-            DestroyPowerup();
+            Consume();
         }
         else if (col.gameObject.layer == 7) // else if hitting Pipe, flip travel direction
         {
@@ -55,28 +57,71 @@ public class MagicMushroomPowerUp : BasePowerUp
     // interface implementation
     public override void SpawnPowerup()
     {
+        spawned = true;
+
+        animator.SetTrigger("spawned");
         magicMushroomAudio.PlayOneShot(magicMushroomAudio.clip);
-        StartCoroutine(WaitForSpawn());
+
+        StartCoroutine(WaitToMoveAfterSpawn());
     }
 
 
     // interface implementation
     public override void ApplyPowerup(MonoBehaviour i)
     {
-        // TODO: do something with the object
+
     }
 
-    IEnumerator WaitForSpawn()
+    public void Consume()
+    {
+        canMove = false;
+        consumed = true;
+
+        // TODO: do something with the object
+        SuperMarioManager.instance.SmallMarioPowerUp();
+
+        // then "destroy" power up
+        // for the mushroom to remain stationary while BoxCollider2D is inactive
+        animator.SetTrigger("reset");
+        powerUpRigidBody.bodyType = RigidbodyType2D.Static;
+        powerUpCollider.enabled = false;
+        this.transform.position = magicMushroomStartingPosition;
+    }
+
+    IEnumerator WaitToMoveAfterSpawn()
     {
         yield return new WaitForSecondsRealtime(1f);
 
-        spawned = true;
-        powerUpRigidBody.bodyType = RigidbodyType2D.Dynamic;
-        powerUpCollider.enabled = true;
+        if (spawned && !consumed)
+        {
+            canMove = true;
+            powerUpRigidBody.bodyType = RigidbodyType2D.Dynamic;
+            powerUpCollider.enabled = true;
+        }
     }
 
     public void MoveMushroom()
     {
         powerUpRigidBody.MovePosition(powerUpRigidBody.position + velocity * moveRight * Time.fixedDeltaTime);
+    }
+
+    public override void GameRestart()
+    {
+        if (spawned)
+        {
+            if (!consumed)
+            {
+                animator.SetTrigger("reset");
+            }
+
+            spawned = false;
+            consumed = false;
+            canMove = false;
+            moveRight = -1;
+
+            powerUpRigidBody.bodyType = RigidbodyType2D.Static;
+            powerUpCollider.enabled = false;
+            this.transform.position = magicMushroomStartingPosition;
+        }
     }
 }

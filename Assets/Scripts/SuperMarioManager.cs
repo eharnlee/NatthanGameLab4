@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Build.Player;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Events;
@@ -11,17 +12,20 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
     public UnityEvent gameStart;
     public UnityEvent gamePause;
     public UnityEvent gameResume;
+    public UnityEvent levelRestart;
     public UnityEvent gameRestart;
     public UnityEvent marioDeath;
     public UnityEvent gameOver;
     public UnityEvent scoreChange;
     public UnityEvent livesChange;
 
-    public static Vector3 marioPosition;
     private GameObject marioBody;
+    public static Vector3 marioPosition;
+
     public AudioMixer audioMixer;
     private AudioMixerSnapshot audioMixerDefaultSnapshot;
     private float specialEventsPitch = 0.95f;
+
     public GameConstants gameConstants;
     public IntVariable lives;
     public IntVariable score;
@@ -70,9 +74,18 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
         gameResume.Invoke();
         Time.timeScale = 1f;
     }
+
+    public void LevelRestart()
+    {
+
+    }
+
     public void GameRestart()
     {
-        score.Value = 0;
+        // SceneManager.LoadSceneAsync("World 1-1", LoadSceneMode.Single);
+
+        score.SetValue(0);
+        lives.SetValue(gameConstants.maxLives);
 
         gameRestart.Invoke();
         Time.timeScale = 1.0f;

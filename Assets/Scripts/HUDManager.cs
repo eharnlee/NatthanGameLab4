@@ -95,7 +95,8 @@ public class HUDManager : MonoBehaviour
         pauseButton.transform.localPosition = pauseButtonPosition[0];
         restartButton.transform.localPosition = restartButtonPosition[0];
 
-
+        SetScore();
+        SetLives();
     }
 
     public void GamePause()

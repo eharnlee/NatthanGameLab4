@@ -88,8 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3109b962bfcbfec45848416f928a25fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brickBlock: {fileID: 2802457659463403493}
-  powerUpObject: {fileID: 5809189023360100912}
+  block: {fileID: 2802457659463403493}
   powerUp: {fileID: 8949098682422453986}
 --- !u!1001 &8522922477771773486
 PrefabInstance:
@@ -157,11 +156,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7924160058751169294, guid: cbef6f9e359b64947ac9f61e0c261fb7, type: 3}
   m_PrefabInstance: {fileID: 8522922477771773486}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5809189023360100912 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2799517636159699998, guid: cbef6f9e359b64947ac9f61e0c261fb7, type: 3}
-  m_PrefabInstance: {fileID: 8522922477771773486}
-  m_PrefabAsset: {fileID: 0}
 --- !u!82 &7966123049494751124 stripped
 AudioSource:
   m_CorrespondingSourceObject: {fileID: 1786480322115334586, guid: cbef6f9e359b64947ac9f61e0c261fb7, type: 3}
@@ -172,7 +166,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 753813077752000716, guid: cbef6f9e359b64947ac9f61e0c261fb7, type: 3}
   m_PrefabInstance: {fileID: 8522922477771773486}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5809189023360100912}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fce0c3b4eac663b4b952126e01227dac, type: 3}

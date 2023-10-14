@@ -228,6 +228,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   spawned: 0
+  animator: {fileID: 0}
 --- !u!1 &7493439076147770616
 GameObject:
   m_ObjectHideFlags: 0

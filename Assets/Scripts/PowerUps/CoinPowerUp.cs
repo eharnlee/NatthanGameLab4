@@ -14,18 +14,18 @@ public class CoinPowerUp : BasePowerUp
         this.type = PowerUpType.Coin;
 
         coinAudio = this.gameObject.GetComponent<AudioSource>();
-    }
-
-    void playCoinSound()
-    {
-        coinAudio.PlayOneShot(coinAudio.clip);
+        animator = this.gameObject.GetComponent<Animator>();
     }
 
     // interface implementation
     public override void SpawnPowerup()
     {
         spawned = true;
-        playCoinSound();
+
+        animator.SetTrigger("spawned");
+        coinAudio.PlayOneShot(coinAudio.clip);
+
+        SuperMarioManager.instance.IncreaseScore(1);
     }
 
 
@@ -34,4 +34,15 @@ public class CoinPowerUp : BasePowerUp
     {
         // TODO: do something with the object
     }
+
+    // public override void GameRestart()
+    // {
+    //     if (spawned)
+    //     {
+    //         spawned = false;
+    //         consumed = false;
+    //         moveRight = -1;
+    //         animator.SetTrigger("reset");
+    //     }
+    // }
 }

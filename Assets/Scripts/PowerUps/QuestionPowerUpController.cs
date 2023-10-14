@@ -29,10 +29,7 @@ public class QuestionPowerUpController : MonoBehaviour, IPowerUpController
     {
         if (other.gameObject.tag == "Player" && !powerUp.hasSpawned)
         {
-            // show disabled sprite
-            blockAnimator.SetTrigger("spawned");
-            // spawn the powerup
-            powerUpAnimator.SetTrigger("spawned");
+
 
             powerUp.SpawnPowerup();
         }
@@ -40,6 +37,14 @@ public class QuestionPowerUpController : MonoBehaviour, IPowerUpController
         {
             blockBumpAudio.PlayOneShot(blockBumpAudio.clip);
         }
+    }
+
+    public void SpawnPowerup()
+    {
+        // show disabled sprite
+        blockAnimator.SetTrigger("spawned");
+        // spawn the powerup
+        powerUpAnimator.SetTrigger("spawned");
     }
 
     // used by animator

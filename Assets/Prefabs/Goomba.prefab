@@ -174,9 +174,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveRight: -1
-  startPosition: {x: 0, y: 0, z: 0}
+  startTransform: {fileID: 481246930518388693}
   enemyAnimator: {fileID: 7499296807614590231}
   stompAudio: {fileID: 7665187769489223936}
+  enemyPrefab: {fileID: 2026140582489150817}
 --- !u!95 &7499296807614590231
 Animator:
   serializedVersion: 5

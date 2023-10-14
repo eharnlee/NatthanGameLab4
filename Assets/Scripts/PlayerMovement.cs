@@ -78,7 +78,6 @@ public class PlayerMovement : MonoBehaviour
             if (marioBodyRigidBody.transform.position.y > other.gameObject.transform.position.y + 0.1)
             {
                 // alive
-                gameManager.IncreaseScore(1);
                 other.gameObject.GetComponent<EnemyMovement>().stomped();
 
                 marioBodyRigidBody.velocity = new Vector2(marioBodyRigidBody.velocity.x, 0);
@@ -87,9 +86,7 @@ public class PlayerMovement : MonoBehaviour
             // else if not above goomba, die
             else
             {
-                marioAnimator.Play("Small Mario Die");
-                PlayDeathImpulse();
-                alive = false;
+
                 MarioDeath();
             }
         }
@@ -198,6 +195,9 @@ public class PlayerMovement : MonoBehaviour
 
     void MarioDeath()
     {
+        marioAnimator.Play("Small Mario Die");
+        PlayDeathImpulse();
+        alive = false;
         // set gameover scene
         gameManager.MarioDeath();
     }
@@ -210,9 +210,10 @@ public class PlayerMovement : MonoBehaviour
         faceRightState = true;
         marioSprite.flipX = false;
 
-        // reset animation
-        marioAnimator.SetTrigger("gameRestart");
         alive = true;
+
+        // reset animation
+        marioAnimator.Play("Small Mario Idle");
 
         // reset camera position
         gameCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;

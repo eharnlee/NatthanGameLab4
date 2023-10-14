@@ -9,6 +9,7 @@ public abstract class BasePowerUp : MonoBehaviour, IPowerup
     protected int moveRight = -1;
     protected Rigidbody2D powerUpRigidBody;
     protected Collider2D powerUpCollider;
+    public Animator animator;
 
     // base methods
     protected virtual void Start()
@@ -43,4 +44,15 @@ public abstract class BasePowerUp : MonoBehaviour, IPowerup
     // 2. abstract methods, must be implemented by derived classes
     public abstract void SpawnPowerup();
     public abstract void ApplyPowerup(MonoBehaviour i);
+
+    public virtual void GameRestart()
+    {
+        if (spawned)
+        {
+            spawned = false;
+            consumed = false;
+            moveRight = -1;
+            animator.SetTrigger("reset");
+        }
+    }
 }
