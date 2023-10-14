@@ -29,7 +29,6 @@ public class PlayerMovement : MonoBehaviour
 
     // for audio
     private AudioSource marioJumpAudio;
-    private AudioSource marioDeathAudio;
     private AudioSource smallMarioPowerUpAudio;
 
     // state
@@ -62,7 +61,6 @@ public class PlayerMovement : MonoBehaviour
         gameCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
 
         marioJumpAudio = this.transform.Find("MarioJumpAudio").GetComponent<AudioSource>();
-        marioDeathAudio = this.transform.Find("MarioDeathAudio").GetComponent<AudioSource>();
         smallMarioPowerUpAudio = this.transform.Find("SmallMarioPowerUpAudio").GetComponent<AudioSource>();
     }
 
@@ -91,9 +89,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 marioAnimator.Play("Small Mario Die");
                 PlayDeathImpulse();
-                marioDeathAudio.PlayOneShot(marioDeathAudio.clip);
                 alive = false;
-                GameOverScene();
+                MarioDeath();
             }
         }
     }
@@ -199,10 +196,10 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void GameOverScene()
+    void MarioDeath()
     {
         // set gameover scene
-        gameManager.GameOver();
+        gameManager.MarioDeath();
     }
 
     public void GameRestart()

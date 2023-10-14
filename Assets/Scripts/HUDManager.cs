@@ -6,7 +6,7 @@ using TMPro;
 public class HUDManager : MonoBehaviour
 {
     private Vector3[] scoreTextPosition = {
-        new Vector3(-775, 600, 0),
+        new Vector3(-645, 600, 0),
         new Vector3(0, 75, 0)
         };
     private Vector3[] highScoreTextPosition = {
@@ -22,11 +22,13 @@ public class HUDManager : MonoBehaviour
     };
 
     public IntVariable gameScore;
+    public IntVariable lives;
 
     private GameObject gamePausedPanel;
     private GameObject gameOverPanel;
     private GameObject scoreText;
     private GameObject highScoreText;
+    private GameObject livesText;
     private GameObject pauseButton;
     private GameObject restartButton;
 
@@ -38,6 +40,7 @@ public class HUDManager : MonoBehaviour
         SuperMarioManager.instance.gameResume.AddListener(GameResume);
         SuperMarioManager.instance.gameRestart.AddListener(GameStart);
         SuperMarioManager.instance.gameOver.AddListener(GameOver);
+        SuperMarioManager.instance.livesChange.AddListener(SetLives);
         SuperMarioManager.instance.scoreChange.AddListener(SetScore);
     }
 
@@ -53,10 +56,15 @@ public class HUDManager : MonoBehaviour
 
     }
 
-    public void SetScore(int score)
+    public void SetScore()
     {
-        scoreText.GetComponent<TextMeshProUGUI>().text = "Score: " + score.ToString("D6");
+        scoreText.GetComponent<TextMeshProUGUI>().text = "Score: " + gameScore.Value.ToString("D6");
         highScoreText.GetComponent<TextMeshProUGUI>().text = "High Score: " + gameScore.previousHighestValue.ToString("D6");
+    }
+
+    public void SetLives()
+    {
+        livesText.GetComponent<TextMeshProUGUI>().text = "Lives: " + lives.Value.ToString();
     }
 
     public void GameStart()
@@ -66,6 +74,7 @@ public class HUDManager : MonoBehaviour
 
         scoreText = this.transform.Find("ScoreText").gameObject;
         highScoreText = this.transform.Find("HighScoreText").gameObject;
+        livesText = this.transform.Find("LivesText").gameObject;
 
         pauseButton = this.transform.Find("PauseButton").gameObject;
         restartButton = this.transform.Find("RestartButton").gameObject;
@@ -75,11 +84,18 @@ public class HUDManager : MonoBehaviour
         gameOverPanel.SetActive(false);
 
         scoreText.transform.localPosition = scoreTextPosition[0];
+        scoreText.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.Left;
+
         highScoreText.transform.localPosition = highScoreTextPosition[0];
+        highScoreText.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.Left;
+
+        livesText.SetActive(true);
 
         pauseButton.SetActive(true);
         pauseButton.transform.localPosition = pauseButtonPosition[0];
         restartButton.transform.localPosition = restartButtonPosition[0];
+
+
     }
 
     public void GamePause()
@@ -100,7 +116,12 @@ public class HUDManager : MonoBehaviour
         gameOverPanel.SetActive(true);
 
         scoreText.transform.localPosition = scoreTextPosition[1];
+        scoreText.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.Center;
+
         highScoreText.transform.localPosition = highScoreTextPosition[1];
+        highScoreText.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.Center;
+
+        livesText.SetActive(false);
 
         pauseButton.SetActive(false);
         restartButton.transform.localPosition = restartButtonPosition[1];

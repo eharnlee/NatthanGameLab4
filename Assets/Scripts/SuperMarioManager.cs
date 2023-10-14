@@ -12,17 +12,19 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
     public UnityEvent gamePause;
     public UnityEvent gameResume;
     public UnityEvent gameRestart;
+    public UnityEvent marioDeath;
     public UnityEvent gameOver;
-    public UnityEvent<int> scoreChange;
+    public UnityEvent scoreChange;
+    public UnityEvent livesChange;
 
     public static Vector3 marioPosition;
     private GameObject marioBody;
-    private int score = 0;
     public AudioMixer audioMixer;
     private AudioMixerSnapshot audioMixerDefaultSnapshot;
     private float specialEventsPitch = 0.95f;
-
-    public IntVariable gameScore;
+    public GameConstants gameConstants;
+    public IntVariable lives;
+    public IntVariable score;
 
     void Start()
     {
@@ -39,7 +41,10 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
 
         marioBody = GameObject.Find("Mario");
 
-        SetScore(score);
+        SetScore();
+        SetLives();
+
+        lives.SetValue(gameConstants.maxLives);
     }
 
     // Update is called once per frame
@@ -51,7 +56,7 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
     public void SceneSetup(Scene current, Scene next)
     {
         gameStart.Invoke();
-        SetScore(score);
+        SetScore();
     }
 
     public void GamePause()
@@ -67,11 +72,24 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
     }
     public void GameRestart()
     {
-        gameScore.Value = 0;
+        score.Value = 0;
 
         gameRestart.Invoke();
         Time.timeScale = 1.0f;
         ResetAudioMixerSpecialEventsPitch();
+    }
+
+    public void MarioDeath()
+    {
+        marioDeath.Invoke();
+
+        lives.ApplyChange(-1);
+        SetLives();
+
+        if (lives.Value < 1)
+        {
+            GameOver();
+        }
     }
 
     public void GameOver()
@@ -85,8 +103,8 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
         // 
         // IncreaseAudioMixerSpecialEventsPitch();
 
-        gameScore.ApplyChange(1);
-        SetScore(gameScore.Value);
+        score.ApplyChange(1);
+        SetScore();
     }
 
     public void IncreaseAudioMixerSpecialEventsPitch()
@@ -107,10 +125,14 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
         audioMixer.SetFloat("SpecialEventsPitch", 1f);
     }
 
-    public void SetScore(int score)
+    public void SetScore()
     {
-        // scoreChange.Invoke(score);
-        scoreChange.Invoke(gameScore.Value);
+        scoreChange.Invoke();
+    }
+
+    public void SetLives()
+    {
+        livesChange.Invoke();
     }
 
     IEnumerator GameOverCoroutine()
@@ -118,6 +140,6 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
         yield return new WaitForSecondsRealtime(0.25f);
         Time.timeScale = 0.0f;
         gameOver.Invoke();
-        gameScore.Value = 0;
+        score.Value = 0;
     }
 }
