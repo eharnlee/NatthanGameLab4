@@ -48,14 +48,6 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.tag == "Player")
-        {
-            StartCoroutine(WaitForDeath());
-        }
-    }
-
     public void GameRestart()
     {
         transform.localPosition = startPosition;
@@ -68,6 +60,7 @@ public class EnemyMovement : MonoBehaviour
     {
         enemyAnimator.SetTrigger("stomped");
         playStompedSound();
+        StartCoroutine(WaitForDeath());
     }
 
     public void playStompedSound()

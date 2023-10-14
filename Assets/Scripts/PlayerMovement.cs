@@ -15,13 +15,16 @@ public class PlayerMovement : MonoBehaviour
     private bool moving = false;
     private bool jumpedState = false;
     private bool onGroundState = true;
-    private Rigidbody2D marioBody;
+
+    private GameObject marioBody;
+    private Rigidbody2D marioBodyRigidBody;
     private SpriteRenderer marioSprite;
     private bool faceRightState = true;
 
     private SuperMarioManager gameManager;
 
     // for animation
+
     private Animator marioAnimator;
 
     // for audio
@@ -47,15 +50,13 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         gameManager = SuperMarioManager.instance;
-        marioSprite = GetComponent<SpriteRenderer>();
 
-        // Set to be 30 FPS
-        Application.targetFrameRate = 30;
-
-        marioBody = GetComponent<Rigidbody2D>();
+        marioBody = this.transform.Find("MarioBody").gameObject;
+        marioSprite = marioBody.GetComponent<SpriteRenderer>();
+        marioBodyRigidBody = this.GetComponent<Rigidbody2D>();
 
         // update animator state
-        marioAnimator = this.gameObject.GetComponent<Animator>();
+        marioAnimator = marioBody.GetComponent<Animator>();
         marioAnimator.SetBool("onGround", onGroundState);
 
         gameCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
@@ -68,7 +69,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        marioAnimator.SetFloat("xSpeed", Mathf.Abs(marioBody.velocity.x));
+        marioAnimator.SetFloat("xSpeed", Mathf.Abs(marioBodyRigidBody.velocity.x));
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -76,21 +77,23 @@ public class PlayerMovement : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             // if above goomba, stomp on goomba
-            if (marioBody.transform.position.y > other.gameObject.transform.position.y + 0.1)
+            if (marioBodyRigidBody.transform.position.y > other.gameObject.transform.position.y + 0.1)
             {
                 // alive
                 gameManager.IncreaseScore(1);
                 other.gameObject.GetComponent<EnemyMovement>().stomped();
 
-                marioBody.velocity = new Vector2(marioBody.velocity.x, 0);
-                marioBody.AddForce(Vector2.up * stompImpulse, ForceMode2D.Impulse);
+                marioBodyRigidBody.velocity = new Vector2(marioBodyRigidBody.velocity.x, 0);
+                marioBodyRigidBody.AddForce(Vector2.up * stompImpulse, ForceMode2D.Impulse);
             }
             // else if not above goomba, die
             else
             {
                 marioAnimator.Play("Small Mario Die");
-                // marioDeathAudio.PlayOneShot(marioDeathAudio.clip);
+                PlayDeathImpulse();
+                marioDeathAudio.PlayOneShot(marioDeathAudio.clip);
                 alive = false;
+                GameOverScene();
             }
         }
     }
@@ -107,7 +110,7 @@ public class PlayerMovement : MonoBehaviour
     // FixedUpdate may be called once per frame. See documentation for details.
     void FixedUpdate()
     {
-        SuperMarioManager.marioPosition = marioBody.position;
+        SuperMarioManager.marioPosition = marioBodyRigidBody.position;
 
         if (alive && moving)
         {
@@ -121,7 +124,7 @@ public class PlayerMovement : MonoBehaviour
         {
             faceRightState = false;
             marioSprite.flipX = true;
-            if (marioBody.velocity.x > 0.05f)
+            if (marioBodyRigidBody.velocity.x > 0.05f)
                 marioAnimator.SetTrigger("onSkid");
 
         }
@@ -130,7 +133,7 @@ public class PlayerMovement : MonoBehaviour
         {
             faceRightState = true;
             marioSprite.flipX = false;
-            if (marioBody.velocity.x < -0.05f)
+            if (marioBodyRigidBody.velocity.x < -0.05f)
                 marioAnimator.SetTrigger("onSkid");
         }
     }
@@ -142,8 +145,8 @@ public class PlayerMovement : MonoBehaviour
 
     void PlayDeathImpulse()
     {
-        marioBody.velocity = Vector2.zero;
-        marioBody.AddForce(Vector2.up * deathImpulse, ForceMode2D.Impulse);
+        marioBodyRigidBody.velocity = Vector2.zero;
+        marioBodyRigidBody.AddForce(Vector2.up * deathImpulse, ForceMode2D.Impulse);
     }
 
     void Move(int value)
@@ -151,8 +154,8 @@ public class PlayerMovement : MonoBehaviour
         Vector2 movement = new Vector2(value, 0);
 
         // check if it doesn't go beyond maxSpeed
-        if (marioBody.velocity.magnitude < maxSpeed)
-            marioBody.AddForce(movement * speed);
+        if (marioBodyRigidBody.velocity.magnitude < maxSpeed)
+            marioBodyRigidBody.AddForce(movement * speed);
     }
 
     public void MoveCheck(int value)
@@ -174,9 +177,11 @@ public class PlayerMovement : MonoBehaviour
         if (alive && onGroundState)
         {
             // jump
-            marioBody.AddForce(Vector2.up * upSpeed, ForceMode2D.Impulse);
+            marioBodyRigidBody.AddForce(Vector2.up * upSpeed, ForceMode2D.Impulse);
             onGroundState = false;
             jumpedState = true;
+            PlayJumpSound();
+
             // update animator state
             marioAnimator.SetBool("onGround", onGroundState);
 
@@ -188,7 +193,7 @@ public class PlayerMovement : MonoBehaviour
         if (alive && jumpedState)
         {
             // jump higher
-            marioBody.AddForce(Vector2.up * upSpeed * 30, ForceMode2D.Force);
+            marioBodyRigidBody.AddForce(Vector2.up * upSpeed * 30, ForceMode2D.Force);
             jumpedState = false;
 
         }
@@ -196,16 +201,14 @@ public class PlayerMovement : MonoBehaviour
 
     void GameOverScene()
     {
-        // stop time
-        Time.timeScale = 0.0f;
         // set gameover scene
-        gameManager.GameOver(); // replace this with whichever way you triggered the game over screen for Checkoff 1
+        gameManager.GameOver();
     }
 
     public void GameRestart()
     {
         // reset position
-        marioBody.transform.position = new Vector3(-6.5f, 2, 0);
+        marioBodyRigidBody.transform.position = new Vector3(-6.5f, 2, 0);
         // reset sprite direction
         faceRightState = true;
         marioSprite.flipX = false;

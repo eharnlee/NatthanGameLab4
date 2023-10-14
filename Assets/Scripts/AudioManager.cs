@@ -32,7 +32,8 @@ public class AudioManager : MonoBehaviour
 
     void GameStart()
     {
-        backgroundMusicAudio = this.transform.Find("BackgroundMusicAudio").gameObject.GetComponent<AudioSource>();
+        backgroundMusicAudio = this.transform.GetChild(0).gameObject.GetComponent<AudioSource>();
+        // backgroundMusicAudio = this.transform.Find("BackgroundMusicAudio").gameObject.GetComponent<AudioSource>();
         pauseAudio = this.transform.Find("PauseAudio").gameObject.GetComponent<AudioSource>();
         gameOverAudio = this.transform.Find("GameOverAudio").gameObject.GetComponent<AudioSource>();
 
@@ -59,6 +60,12 @@ public class AudioManager : MonoBehaviour
     void GameOver()
     {
         backgroundMusicAudio.Stop();
+        StartCoroutine(GameOverCoroutine());
+    }
+
+    IEnumerator GameOverCoroutine()
+    {
+        yield return new WaitForSecondsRealtime(2.5f);
         gameOverAudio.Play();
     }
 }

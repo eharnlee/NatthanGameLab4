@@ -26,6 +26,9 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
 
     void Start()
     {
+        // Set to be 30 FPS
+        Application.targetFrameRate = 30;
+
         gameStart.Invoke();
         Time.timeScale = 1.0f;
         audioMixerDefaultSnapshot = audioMixer.FindSnapshot("Default");
@@ -73,9 +76,7 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
 
     public void GameOver()
     {
-        Time.timeScale = 0.0f;
-        gameOver.Invoke();
-        gameScore.Value = 0;
+        StartCoroutine(GameOverCoroutine());
     }
 
     public void IncreaseScore(int increment)
@@ -112,5 +113,11 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
         scoreChange.Invoke(gameScore.Value);
     }
 
-
+    IEnumerator GameOverCoroutine()
+    {
+        yield return new WaitForSecondsRealtime(0.25f);
+        Time.timeScale = 0.0f;
+        gameOver.Invoke();
+        gameScore.Value = 0;
+    }
 }
