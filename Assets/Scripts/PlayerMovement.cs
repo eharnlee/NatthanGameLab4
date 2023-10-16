@@ -86,7 +86,6 @@ public class PlayerMovement : MonoBehaviour
             // else if not above goomba, die
             else
             {
-
                 MarioDeath();
             }
         }
@@ -198,6 +197,7 @@ public class PlayerMovement : MonoBehaviour
         marioAnimator.Play("Small Mario Die");
         PlayDeathImpulse();
         alive = false;
+
         // set gameover scene
         gameManager.MarioDeath();
     }

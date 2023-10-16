@@ -2,26 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class HUDManager : MonoBehaviour
 {
-    private Vector3[] scoreTextPosition = {
-        new Vector3(-645, 600, 0),
-        new Vector3(0, 75, 0)
-        };
     private Vector3[] highScoreTextPosition = {
+        new Vector3(-645, 600, 0),
+        new Vector3(0, 50, 0)
+        };
+    private Vector3[] scoreTextPosition = {
         new Vector3(-645, 525, 0),
-        new Vector3(0, 10, 0)
+        new Vector3(0, -25, 0)
         };
     private Vector3[] pauseButtonPosition = {
         new Vector3(1000, 590, 0)
     };
     private Vector3[] restartButtonPosition = {
         new Vector3(1120, 590, 0),
-        new Vector3(0, -85, 0)
     };
 
-    public IntVariable gameScore;
+    public IntVariable score;
     public IntVariable lives;
 
     private GameObject gamePausedPanel;
@@ -35,10 +35,7 @@ public class HUDManager : MonoBehaviour
     void Awake()
     {
         // subscribe to events
-        SuperMarioManager.instance.gameStart.AddListener(GameStart);
-        SuperMarioManager.instance.gamePause.AddListener(GamePause);
-        SuperMarioManager.instance.gameResume.AddListener(GameResume);
-        SuperMarioManager.instance.gameRestart.AddListener(GameStart);
+        SuperMarioManager.instance.loadScene.AddListener(OnSceneLoad);
         SuperMarioManager.instance.gameOver.AddListener(GameOver);
         SuperMarioManager.instance.livesChange.AddListener(SetLives);
         SuperMarioManager.instance.scoreChange.AddListener(SetScore);
@@ -56,18 +53,7 @@ public class HUDManager : MonoBehaviour
 
     }
 
-    public void SetScore()
-    {
-        scoreText.GetComponent<TextMeshProUGUI>().text = "Score: " + gameScore.Value.ToString("D6");
-        highScoreText.GetComponent<TextMeshProUGUI>().text = "High Score: " + gameScore.previousHighestValue.ToString("D6");
-    }
-
-    public void SetLives()
-    {
-        livesText.GetComponent<TextMeshProUGUI>().text = "Lives: " + lives.Value.ToString();
-    }
-
-    public void GameStart()
+    public void OnSceneLoad()
     {
         gamePausedPanel = this.transform.Find("GamePausedPanel").gameObject;
         gameOverPanel = this.transform.Find("GameOverPanel").gameObject;
@@ -93,23 +79,37 @@ public class HUDManager : MonoBehaviour
 
         pauseButton.SetActive(true);
         pauseButton.transform.localPosition = pauseButtonPosition[0];
+
+        restartButton.SetActive(true);
         restartButton.transform.localPosition = restartButtonPosition[0];
 
         SetScore();
         SetLives();
     }
 
+    public void SetScore()
+    {
+        scoreText.GetComponent<TextMeshProUGUI>().text = "Score: " + score.Value.ToString("D6");
+        highScoreText.GetComponent<TextMeshProUGUI>().text = "High Score: " + score.previousHighestValue.ToString("D6");
+    }
+
+    public void SetLives()
+    {
+        livesText.GetComponent<TextMeshProUGUI>().text = "Lives: " + lives.Value.ToString();
+    }
+
     public void GamePause()
     {
         gamePausedPanel.SetActive(true);
         pauseButton.SetActive(false);
-
+        SuperMarioManager.instance.GamePause();
     }
 
     public void GameResume()
     {
         gamePausedPanel.SetActive(false);
         pauseButton.SetActive(true);
+        SuperMarioManager.instance.GameResume();
     }
 
     public void GameOver()
@@ -125,11 +125,21 @@ public class HUDManager : MonoBehaviour
         livesText.SetActive(false);
 
         pauseButton.SetActive(false);
-        restartButton.transform.localPosition = restartButtonPosition[1];
+        restartButton.SetActive(false);
 
         // set highscore
-        // highscoreText.GetComponent<TextMeshProUGUI>().text = "High Score: " + gameScore.previousHighestValue.ToString("D6");
+        // highscoreText.GetComponent<TextMeshProUGUI>().text = "High Score: " + score.previousHighestValue.ToString("D6");
         // // show
         // highscoreText.SetActive(true);
+    }
+
+    public void MainMenu()
+    {
+        SuperMarioManager.instance.LoadScene("Main Menu");
+    }
+
+    public void StartNewGame()
+    {
+        SuperMarioManager.instance.StartNewGame();
     }
 }

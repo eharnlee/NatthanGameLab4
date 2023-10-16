@@ -14,6 +14,8 @@ public class GameConstants : ScriptableObject
     public int stompImpulse;
     public Vector3 marioStartingPosition;
 
+    public string currentLevel;
+
     // Goomba's movement
     public float goombaPatrolTime;
     public float goombaMaxOffset;

@@ -16,8 +16,8 @@ public class RestartButton : MonoBehaviour
 
     }
 
-    public void GameRestart()
+    public void LevelRestart()
     {
-        SuperMarioManager.instance.GameRestart();
+        SuperMarioManager.instance.LevelRestart();
     }
 }

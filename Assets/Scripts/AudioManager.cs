@@ -9,20 +9,35 @@ public class AudioManager : MonoBehaviour
     private AudioSource marioDeathAudio;
     private AudioSource gameOverAudio;
     private List<AudioSource> audioSources;
-    private bool isRestartButtonPressed = true;
+    // private bool isRestartButtonPressed = true;
 
     void Awake()
     {
         // subscribe to events
-        SuperMarioManager.instance.gameStart.AddListener(GameStart);
+        SuperMarioManager.instance.loadScene.AddListener(OnSceneLoad);
+
+        SuperMarioManager.instance.gameRestart.AddListener(GameRestart);
         SuperMarioManager.instance.gamePause.AddListener(GamePause);
         SuperMarioManager.instance.gameResume.AddListener(GameResume);
-        SuperMarioManager.instance.gameRestart.AddListener(GameRestart);
+
         SuperMarioManager.instance.marioDeath.AddListener(MarioDeath);
         SuperMarioManager.instance.gameOver.AddListener(GameOver);
     }
 
-    void GameStart()
+
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    void OnSceneLoad()
     {
         backgroundMusicAudio = this.transform.Find("BackgroundMusicAudio").gameObject.GetComponent<AudioSource>();
         pauseAudio = this.transform.Find("PauseAudio").gameObject.GetComponent<AudioSource>();
@@ -39,16 +54,12 @@ public class AudioManager : MonoBehaviour
         backgroundMusicAudio.Play();
     }
 
-    // Start is called before the first frame update
-    void Start()
+    void GameRestart()
     {
+        // isRestartButtonPressed = true;
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        StopAllAudio();
+        backgroundMusicAudio.Play();
     }
 
     void GamePause()
@@ -62,13 +73,6 @@ public class AudioManager : MonoBehaviour
         backgroundMusicAudio.UnPause();
     }
 
-    void GameRestart()
-    {
-        isRestartButtonPressed = true;
-        StopAllAudio();
-        GameStart();
-    }
-
     void MarioDeath()
     {
         marioDeathAudio.Play();
@@ -76,9 +80,12 @@ public class AudioManager : MonoBehaviour
 
     void GameOver()
     {
-        isRestartButtonPressed = false;
+        // isRestartButtonPressed = false;
         backgroundMusicAudio.Stop();
-        StartCoroutine(GameOverCoroutine());
+
+        gameOverAudio.Play();
+
+        // StartCoroutine(GameOverCoroutine());
     }
 
     void StopAllAudio()
@@ -89,13 +96,15 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    IEnumerator GameOverCoroutine()
-    {
-        yield return new WaitForSecondsRealtime(2.5f);
+    // IEnumerator GameOverCoroutine()
+    // {
+    //     yield return new WaitForSecondsRealtime(2.5f);
 
-        if (!isRestartButtonPressed)
-        {
-            gameOverAudio.Play();
-        }
-    }
+    //     // in the case where coroutine continues when game has already been restarted,
+    //     // do not play the game over audio
+    //     if (!isRestartButtonPressed)
+    //     {
+    //         gameOverAudio.Play();
+    //     }
+    // }
 }

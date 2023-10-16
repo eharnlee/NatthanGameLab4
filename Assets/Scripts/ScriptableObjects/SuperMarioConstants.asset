@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ce4a69e7caa8964db13a0b3104f0a43, type: 3}
   m_Name: SuperMarioConstants
   m_EditorClassIdentifier: 
-  maxLives: 3
+  maxLives: 2
   speed: 25
   maxSpeed: 20
   upSpeed: 15
   deathImpulse: 10
   stompImpulse: 10
   marioStartingPosition: {x: -6.5, y: 2, z: 0}
+  currentLevel: World 1-1
   goombaPatrolTime: 0
   goombaMaxOffset: 0

@@ -2,6 +2,34 @@
     "name": "MarioActions",
     "maps": [
         {
+            "name": "Main Menu",
+            "id": "5712b099-5e1e-4b29-8f34-942056b6e60e",
+            "actions": [
+                {
+                    "name": "Click",
+                    "type": "Button",
+                    "id": "051cfb57-b811-4bb3-be25-53046d3ccc83",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "498ee756-39c5-4e32-869f-5ab09b9b0963",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "MarioActions",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "Gameplay",
             "id": "205c2bf3-4e89-4353-bee7-5cd97716b702",
             "actions": [

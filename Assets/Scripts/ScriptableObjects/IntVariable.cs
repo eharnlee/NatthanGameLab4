@@ -5,6 +5,8 @@ public class IntVariable : Variable<int>
 {
 
     public int previousHighestValue;
+    public int currentLevelInitialScore;
+
     public override void SetValue(int value)
     {
         if (value > previousHighestValue) previousHighestValue = value;

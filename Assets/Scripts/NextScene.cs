@@ -9,8 +9,7 @@ public class NextScene : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            Debug.Log("Change scene!");
-            SceneManager.LoadSceneAsync(nextSceneName, LoadSceneMode.Single);
+            SuperMarioManager.instance.LoadScene(nextSceneName);
         }
     }
 }
