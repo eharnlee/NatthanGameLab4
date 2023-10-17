@@ -29,7 +29,7 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
     // private float specialEventsPitch = 0.95f;
 
     // Scriptable Objects
-    public GameConstants gameConstants;
+    public GameVariables gameVariables;
     public IntVariable lives;
     public IntVariable score;
 
@@ -45,6 +45,8 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
         marioBody = GameObject.Find("Mario");
 
         Time.timeScale = 1.0f;
+
+        loadScene.Invoke();
 
         // audioMixerDefaultSnapshot = audioMixer.FindSnapshot("Default");
         // audioMixerDefaultSnapshot.TransitionTo(0.1f);
@@ -70,11 +72,11 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
 
         if (nextSceneName == "Main Menu")
         {
-            gameConstants.currentLevel = "World 1-1";
+            gameVariables.currentLevel = "World 1-1";
         }
         else
         {
-            gameConstants.currentLevel = nextSceneName;
+            gameVariables.currentLevel = nextSceneName;
         }
 
         SceneManager.LoadSceneAsync(nextSceneName, LoadSceneMode.Single);
@@ -87,6 +89,8 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
 
         marioBody = GameObject.Find("Mario");
 
+        yield return new WaitForSecondsRealtime(1.5f);
+
         Time.timeScale = 1.0f;
     }
 
@@ -98,7 +102,7 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
     IEnumerator StartNewGameCoroutine()
     {
         score.SetValue(0);
-        lives.SetValue(gameConstants.maxLives);
+        lives.SetValue(gameVariables.maxLives);
 
         yield return new WaitForSecondsRealtime(0.3f);
 
@@ -107,34 +111,36 @@ public class SuperMarioManager : Singleton<SuperMarioManager>
 
     public void LevelRestart()
     {
-        StartCoroutine(LevelRestartCoroutine());
-    }
-
-    public void GameRestart()
-    {
-        score.SetValue(0);
-        score.currentLevelInitialScore = 0;
-        lives.SetValue(gameConstants.maxLives);
-
-        StartCoroutine(LevelRestartCoroutine());
-    }
-
-    IEnumerator LevelRestartCoroutine()
-    {
         score.SetValue(score.currentLevelInitialScore);
-        Time.timeScale = 0.0f;
-        SceneManager.LoadSceneAsync(gameConstants.currentLevel, LoadSceneMode.Single);
-
-        yield return new WaitForSecondsRealtime(0.5f);
-
-        loadScene.Invoke();
-        gameRestart.Invoke();
-
-        marioBody = GameObject.Find("Mario");
-
-        Time.timeScale = 1.0f;
-        // ResetAudioMixerSpecialEventsPitch();
+        LoadScene(gameVariables.currentLevel);
+        // StartCoroutine(LevelRestartCoroutine());
     }
+
+    // public void GameRestart()
+    // {
+    //     score.SetValue(0);
+    //     score.currentLevelInitialScore = 0;
+    //     lives.SetValue(gameVariables.maxLives);
+
+
+    // }
+
+    // IEnumerator LevelRestartCoroutine()
+    // {
+
+    //     Time.timeScale = 0.0f;
+    //     SceneManager.LoadSceneAsync(gameVariables.currentLevel, LoadSceneMode.Single);
+
+    //     yield return new WaitForSecondsRealtime(0.5f);
+
+    //     loadScene.Invoke();
+    //     gameRestart.Invoke();
+
+    //     marioBody = GameObject.Find("Mario");
+
+    //     Time.timeScale = 1.0f;
+    //     // ResetAudioMixerSpecialEventsPitch();
+    // }
 
     public void GamePause()
     {

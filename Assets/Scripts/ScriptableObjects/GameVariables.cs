@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "GameConstants", menuName = "ScriptableObjects/GameConstants", order = 1)]
-public class GameConstants : ScriptableObject
+public class GameVariables : ScriptableObject
 {
     // lives
     public int maxLives;

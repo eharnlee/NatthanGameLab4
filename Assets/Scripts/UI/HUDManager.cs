@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Linq.Expressions;
+using UnityEngine.UI;
 
 public class HUDManager : MonoBehaviour
 {
@@ -24,6 +26,7 @@ public class HUDManager : MonoBehaviour
     public IntVariable score;
     public IntVariable lives;
 
+    private GameObject loadingScreen;
     private GameObject gamePausedPanel;
     private GameObject gameOverPanel;
     private GameObject scoreText;
@@ -53,8 +56,15 @@ public class HUDManager : MonoBehaviour
 
     }
 
+    public void StartNewGame()
+    {
+        SuperMarioManager.instance.StartNewGame();
+    }
+
     public void OnSceneLoad()
     {
+        loadingScreen = this.transform.Find("LoadingScreen").gameObject;
+
         gamePausedPanel = this.transform.Find("GamePausedPanel").gameObject;
         gameOverPanel = this.transform.Find("GameOverPanel").gameObject;
 
@@ -85,17 +95,28 @@ public class HUDManager : MonoBehaviour
 
         SetScore();
         SetLives();
+
+        StartCoroutine(LoadingScreenCoroutine());
     }
 
-    public void SetScore()
+    IEnumerator LoadingScreenCoroutine()
     {
-        scoreText.GetComponent<TextMeshProUGUI>().text = "Score: " + score.Value.ToString("D6");
-        highScoreText.GetComponent<TextMeshProUGUI>().text = "High Score: " + score.previousHighestValue.ToString("D6");
+        yield return new WaitForSecondsRealtime(0.3f);
+
+        for (float alpha = 1f; alpha > 0f; alpha -= 0.1f)
+        {
+            loadingScreen.GetComponent<CanvasGroup>().alpha = alpha;
+
+            yield return new WaitForSecondsRealtime(0.1f);
+        }
+
+        loadingScreen.SetActive(false);
     }
 
-    public void SetLives()
+
+    public void LevelRestart()
     {
-        livesText.GetComponent<TextMeshProUGUI>().text = "Lives: " + lives.Value.ToString();
+        SuperMarioManager.instance.LevelRestart();
     }
 
     public void GamePause()
@@ -138,8 +159,17 @@ public class HUDManager : MonoBehaviour
         SuperMarioManager.instance.LoadScene("Main Menu");
     }
 
-    public void StartNewGame()
+
+
+    public void SetScore()
     {
-        SuperMarioManager.instance.StartNewGame();
+        scoreText.GetComponent<TextMeshProUGUI>().text = "Score: " + score.Value.ToString("D6");
+        highScoreText.GetComponent<TextMeshProUGUI>().text = "High Score: " + score.previousHighestValue.ToString("D6");
     }
+
+    public void SetLives()
+    {
+        livesText.GetComponent<TextMeshProUGUI>().text = "Lives: " + lives.Value.ToString();
+    }
+
 }
